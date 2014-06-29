@@ -1,3 +1,15 @@
+/bin/www
+/.idea/.name
+/.idea/encodings.xml
+/.idea/jsLibraryMappings.xml
+/.idea/libraries/pisky_node_modules.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/pisky.iml
+/.idea/runConfigurations/bin_www.xml
+/.idea/scopes/scope_settings.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
 # Logs
 logs
 *.log

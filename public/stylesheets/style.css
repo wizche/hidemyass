@@ -1,0 +1,31 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.status {
+    font-size: 140%;
+}
+
+.gauge {
+    width: 360px;
+    height: 280px;
+}
+#serverList {
+    width: 550px;
+}
+
+#serverList li {
+    cursor: pointer;
+    padding: 7px;
+    text-decoration: underline;
+    text-decoration-color: blue;
+}
+
+#serverList li:hover {
+    background-color: #fbd850;
+}

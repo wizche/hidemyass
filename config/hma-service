@@ -1,0 +1,118 @@
+#!/bin/bash
+#
+# Version: 1.0.0
+# description: OpenVPN configuration with HideMyAss
+# Author: Fabio Schiavoni & Sergio Paganoni
+# Start the service hma-service
+
+LOGFILE="/tmp/hma-service.log"
+OPVFILE="/tmp/openvpn.log"
+VPNNATION="Italy"
+
+do_check_pid() {
+  OPVPN_PID=$(ps -ef | grep openvpn | grep -v grep | awk '{print $2}')
+  if [ ! -z "$OPVPN_PID" ]
+  then
+    OPVPN_RUNNING=2
+  else
+	OPVPN_PID=0
+    OPVPN_RUNNING=0      
+  fi
+}
+
+start() {
+	do_check_pid
+	if [ "$OPVPN_RUNNING" -eq "2" ]
+	then
+		echo "[`date` Debug]--> The openVPN is running" >> "$LOGFILE"
+	else
+		echo "[`date` Debug]--> Start internet configuration" >> "$LOGFILE"
+		echo "[`date` Debug]--> Set the default GW of wlan0" >> "$LOGFILE"
+		route del default
+		route add default gw 192.168.1.1 wlan0
+		echo "[`date` Debug]--> Test internet connection" >> "$LOGFILE"
+		wget -q --tries=10 --timeout=20 http://google.com
+		if [[ $? -eq 0 ]]; then
+			echo "[`date` Debug]--> Internet connection is OK" >> "$LOGFILE"
+		else
+			echo "[`date` ERROR]--> Offline no connection: Reboot the service and control the connection with the Internet" >> "$LOGFILE"
+			exit 1
+		fi
+		rm index.html
+		echo "[`date` Debug]--> Start OpenVPN configuration with $VPNNATION parameter " >> "$LOGFILE"
+		hma-vpn "$VPNNATION" &> "$OPVFILE" &
+		echo "[`date` Debug]--> NAT configuration" >> "$LOGFILE"
+		echo 1 > /proc/sys/net/ipv4/ip_forward
+		sleep 15
+		iptables --flush
+		iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE
+		#iptables -A FORWARD -i tun0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+		#iptables -A FORWARD -i wlan0 -o tun0 -j ACCEPT
+		iptables -A FORWARD -i tun0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+		iptables -A FORWARD -i eth0 -o tun0 -j ACCEPT
+		echo "[`date` Debug]--> Configuration NAT OK" >> "$LOGFILE"
+		sleep 20
+		route del default gw 192.168.1.1 wlan0
+	fi
+	do_check_pid
+	if [ "$OPVPN_RUNNING" -eq "2" ]
+	then
+		echo "[`date` Debug]--> The openVPN is running" >> "$LOGFILE"
+		echo "[`date` Debug]--> The openVPN is running"
+	else
+		echo "[`date` ERROR]--> The openVPN is NOT running" >> "$LOGFILE"
+                echo "[`date` ERROR]--> The openVPN is NOT running"
+		exit 1
+        fi
+	echo
+}
+# Restart the service hma-service
+stop() {
+        echo "[`date` Debug]--> Stop service and clear all settings" >> "$LOGFILE"
+        do_check_pid
+	if [ $OPVPN_RUNNING != 2 ] ; then
+                echo "[`date` Debug]--> The openVPN is stoped" >> "$LOGFILE"
+		echo "[`date` Debug]--> The openVPN is stoped"
+        else
+		echo "[`date` Debug]--> Stoped VPN service" >> "$LOGFILE"
+		killall openvpn
+                iptables --flush
+        fi
+}
+
+status(){
+	do_check_pid
+	if [ $OPVPN_RUNNING != 2 ] ; then
+		echo "[`date` Debug]--> The openVPN is NOT running" >> "$LOGFILE"
+		echo "[`date` Debug]--> The openVPN is NOT running"
+	else
+		echo "[`date` Debug]--> The openVPN is running" >> "$LOGFILE"
+		echo "[`date` Debug]--> The openVPN is running"
+	fi
+}
+
+### main logic ###
+case "$1" in
+  start)
+        start
+        ;;
+  switch)
+        VPNNATION="$2"
+	stop
+	start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart|reload|condrestart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|status|switch}"
+        exit 1
+esac
+exit 0
