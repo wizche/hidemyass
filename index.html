@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>HMA - Traffic Hijacker by wizche</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/wizche/hidemyass">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/wizche/hidemyass/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/wizche/hidemyass/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>HMA - Traffic Hijacker</h1>
+          <p>Use Raspberry Pi as gateway for Hide My Ass VPN</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/wizche">wizche</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="use-raspberry-pi-as-gateway-for-hide-my-ass-vpn" class="anchor" href="#use-raspberry-pi-as-gateway-for-hide-my-ass-vpn"><span class="octicon octicon-link"></span></a>Use Raspberry Pi as gateway for Hide My Ass VPN</h1>
+
+<p><img src="doc/overview.png" alt="Overview" title="HMA overview"></p>
+
+<p>This project contains some bash scripts and a monitoring node.js application that allows the Raspberry Pi to act as a gateway and permit traffic from the wired interface (eth0, where you may connect your media-box) to the wireless interface (wlan0 -&gt; Internet) <strong>only</strong> through a HideMyAss VPN tunnel.</p>
+
+<p>The hma-vpn script in the <code>config\</code> directory is based on the official script provided by HMA with a small modification to inject user/password through an authentication file.</p>
+
+<p>The hma-service script in the <code>config\</code> directory is used to start the VPN connection on startup (init.d service script). 
+It also add the NAT rules to translate traffic from eth0 to tun0 (vpn interface) and vice-versa.
+This scripts also implement a <code>switch [ip]</code> command that is used from the node.js application to switch the VPN server.</p>
+
+<p>The forever_start.sh script in the <code>config\</code> directory uses <a href="https://github.com/nodejitsu/forever">forever</a> to start the monitoring application at boot. (add it to <code>rc.local</code>)</p>
+
+<h2>
+<a name="management-application" class="anchor" href="#management-application"><span class="octicon octicon-link"></span></a>Management Application</h2>
+
+<p>Through the management application you can have a glance on the current VPN tunnel with network usage statistics. 
+Furthermore you can change the VPN server directly from the application just by clicking on the desired server from the list.</p>
+
+<p><em>Remark:</em> The list of available server is filtered, client-side, to display only HMA servers in <strong>Italy</strong>.</p>
+
+<p><img src="doc/node-app.png" alt="Management Web-App" title="Management Web-App"></p>
+
+<h2>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<ul>
+<li>Download the repository somewhere on the Raspberry Pi</li>
+<li>Copy <code>config\hma-service</code> to the <code>/etc/init.d/</code> directory (add the executable permission <code>#chmod +x hma-service</code> if needed)</li>
+<li>Adjust the default gateway IP in the <code>hma-service</code> file to match yours</li>
+<li>Copy <code>config\hma-vpn</code> somewhere and add it to the PATH (or create a symbolic link to it <code>#ln -s /bin/hma-vpn config\hma-vpn</code>)</li>
+<li>Add the <code>forever_start.sh</code> script to <code>/etc/rc.local</code> </li>
+<li>Add you HMA credentials to the <code>config\auth.txt</code> file </li>
+<li>Adjust the path to the <code>auth.txt</code> file in <code>hma-vpn</code> script by replacing the sed pattern with the correct one (in this case was <code>/opt/pisky/config/auth.txt</code>)</li>
+<li>Install node.js dependencies with <code>#npm install</code>
+</li>
+<li>Adjust the web-socket URL in the <code>index.ejs</code> file (<code>io.connect('http://localhost');</code>) to match your Raspberry IP address</li>
+<li>Start the VPN connection with <code>#/etc/init.d/hma-service start</code>
+</li>
+<li>Start the node.js application with the <code>#config\forever_start.sh</code> command</li>
+<li>Open the browser and navigate to <code>http://rasberry-ip/</code>
+</li>
+</ul><h2>
+<a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h2>
+
+<p>Video coming soon....</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
