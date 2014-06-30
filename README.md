@@ -5,7 +5,7 @@ Use Raspberry Pi as gateway for Hide My Ass VPN
 
 This project contains some bash scripts and a monitoring node.js application that allows the Raspberry Pi to act as a gateway and permit traffic from the wired interface (eth0, where you may connect your media-box) to the wireless interface (wlan0 -> Internet) **only** through a HideMyAss VPN tunnel.
 
-The hma-vpn script in the `config\` directory is based on the official script provided by [HMA]([https://support.hidemyass.com/entries/24970862-Recommended-Linux-CLI-OpenVPN-Client]) with a small modification to inject user/password through an authentication file.
+The hma-vpn script in the `config\` directory is based on the official script provided by [HMA](https://support.hidemyass.com/entries/24970862-Recommended-Linux-CLI-OpenVPN-Client) with a small modification to inject user/password through an authentication file.
 
 The hma-service script in the `config\` directory is used to start the VPN connection on startup (init.d service script). 
 It also add the NAT rules to translate traffic from eth0 to tun0 (vpn interface) and vice-versa.
