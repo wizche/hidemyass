@@ -42,4 +42,4 @@ Setup
 Demo (Video)
 ------------
 
-[![Demo Video](http://img.youtube.com/vi/uvCM_TIpgy0/0.jpg)](http://www.youtube.com/watch?v=uvCM_TIpgy0)
+[![Demo Video](http://img.youtube.com/vi/Kuayu57K2nM/0.jpg)](http://www.youtube.com/watch?v=Kuayu57K2nM)
