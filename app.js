@@ -165,15 +165,6 @@ io.on('connection', function (socket) {
 
     collectServerData(socket);
 
-    /*
-     function puts(error, stdout, stderr) {
-     var serverList = stdout;
-     socket.emit('servers', serverList);
-     }
-
-     exec("hma-vpn.sh -l Italy", puts);
-     */
-
     socket.on('disconnect', function () {
         console.log("User disconnected");
         if (cronJob) {

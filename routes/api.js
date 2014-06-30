@@ -6,7 +6,7 @@ module.exports = function (app, io) {
     app.get('/api/switch/:id', function (req, res) {
         var ip = req.param('id');
         io.sockets.emit('log', "Switch request for IP " + ip);
-        exec('/etc/init.d/openvpn switch ' + ip,
+        exec('/etc/init.d/hma-service switch ' + ip,
             function (error, stdout, stderr) {
                 console.log('stdout: ' + stdout);
                 console.log('stderr: ' + stderr);
