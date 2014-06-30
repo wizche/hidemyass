@@ -39,7 +39,7 @@ Setup
 * Start the node.js application with the `#config\forever_start.sh` command
 * Open the browser and navigate to `http://rasberry-ip/`
 
-Demo
-----
+Demo (Video)
+------------
 
-Video coming soon....
+[![Demo Video](http://img.youtube.com/vi/uvCM_TIpgy0/0.jpg)](http://www.youtube.com/watch?v=uvCM_TIpgy0)
